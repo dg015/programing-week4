@@ -10,6 +10,10 @@ namespace NodeCanvas.Tasks.Actions{
         public BBParameter<Vector3> startLocation;
         private NavMeshAgent navAgent;
 
+        public float maxWait = 5;
+        public float minWait = 1;
+        public float WaitTime;
+
         protected override string OnInit(){
             navAgent = agent.GetComponent<NavMeshAgent>();
             return null;
@@ -26,8 +30,14 @@ namespace NodeCanvas.Tasks.Actions{
 			navAgent.SetDestination(startLocation.value);
 			if(Vector3.Distance(agent.transform.position,startLocation.value) < 0.5)
 			{
-				EndAction(true);
-			}
+                WaitTime = Random.Range(minWait, maxWait);
+                WaitTime -= Time.deltaTime;
+                if (WaitTime <= 0)
+                {
+                    EndAction(true);
+                }
+
+            }
         }
 
 		//Called when the task is disabled.
